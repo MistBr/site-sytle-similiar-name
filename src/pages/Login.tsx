@@ -229,22 +229,6 @@ const handleLogin = async (e: React.FormEvent) => {
                     </svg>
                     <span>Entrar com Google</span>
                   </button>
-                  
-                  <button 
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 hover:bg-gray-50 bg-white"
-                    disabled
-                  >
-                    <Facebook className="h-4 w-4 text-blue-600" />
-                    <span>Entrar com Facebook</span>
-                  </button>
-                  
-                  <button 
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 hover:bg-gray-50 bg-white"
-                    disabled
-                  >
-                    <Smartphone className="h-4 w-4" />
-                    <span>Entrar com Celular</span>
-                  </button>
                 </div>
                 
                 {googleError && (
