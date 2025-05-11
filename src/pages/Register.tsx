@@ -112,7 +112,7 @@ useEffect(() => {
           <div className="max-w-6xl mx-auto">
             <div className="mb-4">
               <Button 
-                className="flex items-center gap-2 bg-white"
+                className="flex items-center gap-2 bg-white text-gray-800 shadow"
                 onClick={handleBack}
               >
                 <ChevronLeft className="h-4 w-4" />
