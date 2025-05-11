@@ -187,7 +187,7 @@ const login = async (email: string, password: string) => {
       delete api.defaults.headers.common['Authorization'];
 
       toast({ title: "Logout realizado", description: "Você saiu da sua conta com sucesso." });
-      navigate('/login');
+      navigate('/entrar');
     };
 
     const value: AuthContextType = {

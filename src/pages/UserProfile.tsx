@@ -19,13 +19,11 @@ const UserProfile = () => {
     navigate(-1);
   };
 
-  if (!isAuthenticated) {
-    // Redirect to login if not authenticated
-    React.useEffect(() => {
+  React.useEffect(() => {
+    if (!isAuthenticated) {
       navigate('/entrar');
-    }, [navigate]);
-    return null;
-  }
+    }
+  }, [isAuthenticated, navigate]);
 
   // Get initials for avatar fallback
   const getInitials = (name: string) => {
