@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
 import { ClipboardCopy, QrCode, Phone, Info, CheckCircle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import QRCode from 'react-qr-code';
+
 
 interface PurchaseDialogProps {
   isOpen: boolean;
@@ -54,21 +56,14 @@ const PurchaseDialog = ({ isOpen, onClose, totalPrice, orderNumber }: PurchaseDi
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <QrCode className="h-32 w-32 text-robot-blue" />
-              <motion.div 
-                className="absolute inset-0 flex items-center justify-center"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                <div className="h-14 w-14 text-robot-blue bg-white/80 rounded-full flex items-center justify-center">
-                  <img 
-                    src="/placeholder.svg" 
-                    alt="ROBOT Logo" 
-                    className="h-10 w-10 object-contain"
-                  />
-                </div>
-              </motion.div>
+           <div style={{ background: '#FFFFFF', padding: '8px', borderRadius: '8px' }}>
+            <QRCode
+              value={`http://localhost:5173/loja/${orderNumber}`}
+              size={128}
+              fgColor="#1E3A8A" />
+           </div>
+ 
+
             </motion.div>
             
             <div className="flex items-center gap-2 mb-1">

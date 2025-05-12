@@ -125,7 +125,7 @@ const ShoppingCartDrawer = ({
                   <span className="font-bold text-robot-blue text-xl">R${totalPrice.toFixed(2)}</span>
                 </motion.div>
                 <MotionButton 
-                  className="w-full bg-robot-blue hover:bg-blue-800 transition-colors duration-300"
+                  className="flex-1 bg-black text-white hover:bg-robot-blue transition-colors duration-300" 
                   onClick={handleFinishPurchase}
                   whileTap={{ scale: 0.98 }}
                   whileHover={{ 

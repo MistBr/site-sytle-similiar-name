@@ -340,7 +340,7 @@ const Shop = () => {
                     <CardFooter>
                       <div className="flex gap-2 w-full">
                         <Button 
-                          className="flex-1 bg-robot-blue hover:bg-blue-800" 
+                          className="flex-1 bg-black text-white hover:bg-robot-blue transition-colors duration-300" 
                           onClick={() => addToCart(product)}
                         >
                           Adicionar ao Carrinho
