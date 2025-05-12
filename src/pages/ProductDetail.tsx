@@ -495,7 +495,7 @@ const ProductDetail = () => {
                   <div className="flex flex-col sm:flex-row gap-4 mb-6">
                     <Button 
                       onClick={addToCart}
-                      className="flex-1 flex items-center justify-center gap-2 bg-robot-blue hover:bg-blue-700"
+                      className="flex-1 bg-indigo-600 hover:bg-indigo-700"
                     >
                       <ShoppingCart className="h-5 w-5" />
                       Adicionar ao Carrinho

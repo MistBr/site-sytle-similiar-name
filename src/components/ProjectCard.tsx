@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, Heart, Share2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { addToFavorites, isInFavorites, removeFromFavorites, shareItem } from '@/utils/favorites';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Project {
   id: number;
@@ -25,8 +26,10 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
-  
+  const { isAuthenticated } = useAuth();
+
   useEffect(() => {
     // Check if project is in favorites
     setIsFavorite(isInFavorites(project.id, 'project'));
@@ -69,48 +72,59 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     });
   };
   
-  const toggleFavorite = () => {
-    if (isFavorite) {
-      const removed = removeFromFavorites(project.id, 'project');
-      if (removed) {
-        setIsFavorite(false);
-        toast({
-          title: "Removido dos favoritos",
-          description: `${project.title} foi removido dos seus favoritos.`,
-        });
-      }
-    } else {
-      const added = addToFavorites({
-        id: project.id,
-        name: project.title,
-        type: 'project',
-        image: project.thumbnail,
-        description: project.description,
-        date: new Date().toISOString()
+const toggleFavorite = () => {
+  if (!isAuthenticated) {
+    toast({
+      title: "É necessário estar logado",
+      description: "Faça login para favoritar um projeto.",
+    });
+    navigate('/entrar');
+    return;
+  }
+
+  if (isFavorite) {
+    const removed = removeFromFavorites(project.id, 'project');
+    if (removed) {
+      setIsFavorite(false);
+      toast({
+        title: "Removido dos favoritos",
+        description: `${project.title} foi removido dos seus favoritos.`,
       });
-      
-      if (added) {
-        // Also update likes count
-        const savedProjects = localStorage.getItem('workshopProjects');
-        if (savedProjects) {
-          const projects = JSON.parse(savedProjects);
-          const updatedProjects = projects.map((p: Project) => {
-            if (p.id === project.id) {
-              return { ...p, likes: p.likes + 1 };
-            }
-            return p;
-          });
-          localStorage.setItem('workshopProjects', JSON.stringify(updatedProjects));
-        }
-        
-        setIsFavorite(true);
-        toast({
-          title: "Adicionado aos favoritos",
-          description: `${project.title} foi adicionado aos seus favoritos.`,
-        });
-      }
     }
-  };
+  } else {
+    const added = addToFavorites({
+      id: project.id,
+      name: project.title,
+      type: 'project',
+      image: project.thumbnail,
+      description: project.description,
+      date: new Date().toISOString()
+    });
+
+    if (added) {
+      // Atualiza os likes no localStorage
+      const savedProjects = localStorage.getItem('workshopProjects');
+      if (savedProjects) {
+        const projects = JSON.parse(savedProjects);
+        const updatedProjects = projects.map((p: Project) => {
+          if (p.id === project.id) {
+            return { ...p, likes: p.likes + 1 };
+          }
+          return p;
+        });
+        localStorage.setItem('workshopProjects', JSON.stringify(updatedProjects));
+      }
+
+      setIsFavorite(true);
+      toast({
+        title: "Adicionado aos favoritos",
+        description: `${project.title} foi adicionado aos seus favoritos.`,
+      });
+    }
+  }
+};
+
+
   
   const handleShare = () => {
     shareItem({
@@ -152,7 +166,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow duration-300 transform hover:scale-[1.02] transition-transform duration-300">
+    <Card className="overflow-hidden hover:shadow-md duration-300 transform hover:scale-[1.02] transition-transform">
       <Link to={`/workshop/projeto/${project.id}`}>
         <CardHeader className="pb-2">
           <div className="h-48 bg-gray-200 rounded overflow-hidden mb-4">

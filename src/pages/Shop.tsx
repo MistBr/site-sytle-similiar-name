@@ -12,6 +12,9 @@ import ShoppingCartDrawer from '@/components/ShoppingCartDrawer';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageTransition from '@/components/PageTransition';
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 interface Product {
   id: number;
@@ -31,6 +34,8 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState('todos');
   const [sortOrder, setSortOrder] = useState('default');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   
   const products: Product[] = [
     { 
@@ -135,24 +140,34 @@ const Shop = () => {
     setFilteredProducts(filtered);
   }, [searchQuery, selectedCategory, sortOrder, products]);
 
-  const addToCart = (product: Product) => {
-    setCart(prevCart => {
-      const existingProduct = prevCart.find(item => item.id === product.id);
-      
-      if (existingProduct) {
-        return prevCart.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        return [...prevCart, { ...product, quantity: 1 }];
-      }
-    });
-    
+const addToCart = (product: Product) => {
+  if (!isAuthenticated) {
     toast({
-      title: "Produto adicionado",
-      description: `${product.name} foi adicionado ao carrinho.`,
+      title: "Login necessário",
+      description: "Você precisa estar logado para adicionar produtos ao carrinho.",
+      variant: "destructive"
     });
-  };
+    navigate("/entrar");
+    return;
+  }
+
+  setCart(prevCart => {
+    const existingProduct = prevCart.find(item => item.id === product.id);
+
+    if (existingProduct) {
+      return prevCart.map(item =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+    } else {
+      return [...prevCart, { ...product, quantity: 1 }];
+    }
+  });
+
+  toast({
+    title: "Produto adicionado",
+    description: `${product.name} foi adicionado ao carrinho.`,
+  });
+};
 
   const updateQuantity = (productId: number, action: 'increase' | 'decrease') => {
     setCart(prevCart => 

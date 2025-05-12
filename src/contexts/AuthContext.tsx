@@ -184,6 +184,7 @@ const login = async (email: string, password: string) => {
       setCurrentUser(null);
       localStorage.removeItem('currentUser');
       localStorage.removeItem('token');
+      localStorage.removeItem('robotCleanerCart');
       delete api.defaults.headers.common['Authorization'];
 
       toast({ title: "Logout realizado", description: "Você saiu da sua conta com sucesso." });
