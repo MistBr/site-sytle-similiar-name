@@ -13,6 +13,12 @@ import { errorHandler } from './utils/errorHandler.js';
 
 // Configuração de ambiente
 dotenv.config();
+console.log(process.env); 
+console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
+console.log('GOOGLE_CALLBACK_URL:', process.env.GOOGLE_CALLBACK_URL);
+
+
 
 // Conexão com o MongoDB
 const connectDB = async () => {
@@ -58,6 +64,12 @@ app.use(session({
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   }
 }));
+
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  next();
+});
 
 // Configuração do Passport
 app.use(passport.initialize());

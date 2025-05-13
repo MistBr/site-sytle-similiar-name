@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import passport from 'passport';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { login, register, googleLogin, protect } from '../controllers/auth.js';
 import User from '../models/User.js'; // Garanta que o path e extensão estão corretos
+import express from 'express';
 
 const router = Router();
 
@@ -12,22 +12,31 @@ router.post('/register', register);
 router.post('/login', login);
 
 // Login com Google
-router.get(
-  '/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-    prompt: 'select_account'
-  })
+router.get('/google',
+  passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' })
 );
 
 // Callback do Google
-router.get(
-  '/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: `${process.env.FRONTEND_URL}/login?error=google-auth`,
-    session: false
-  }),
-  googleLogin
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  async (req, res) => {
+    try {
+      const user = req.user;
+
+      // Gerar token JWT
+      const token = jwt.sign(
+        { id: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+
+      // Redirecionar para o frontend com o token
+      res.redirect(`http://localhost:5173/auth/success?token=${token}`);
+    } catch (err) {
+      console.error('Erro ao gerar o token:', err);
+      res.redirect('http://localhost:5173/login'); // Redireciona para a página de login em caso de erro
+    }
+  }
 );
 
 // Rota protegida de exemplo
@@ -53,7 +62,7 @@ router.get('/logout', (req, res) => {
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    
+
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Por favor, preencha todos os campos' });
     }
@@ -105,5 +114,13 @@ router.get('/auth/google', (req, res, next) => {
     state: JSON.stringify({ action })
   })(req, res, next);
 });
+
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { session: false, failureRedirect: '/login' }),
+  googleLogin
+);
 
 export default router;

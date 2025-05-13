@@ -2,7 +2,18 @@ import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
 import User from '../models/User.js';
 import { AppError } from '../utils/errorHandler.js';
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id);
+  done(null, user);
+});
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {

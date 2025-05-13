@@ -6,16 +6,18 @@ import User from '../models/User.js';
 import { Strategy as LocalStrategy } from 'passport-local';
 
 const configurePassport = () => {
+  console.log("GOOGLE_CLIENT_ID", process.env.GOOGLE_CLIENT_ID);
+  console.log("GOOGLE_CLIENT_SECRET", process.env.GOOGLE_CLIENT_SECRET);
   // Estratégia Google OAuth
-  passport.use(
+  passport.use( 
     new GoogleStrategy(
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.GOOGLE_CALLBACK_URL || '/api/auth/google/callback',
+        callbackURL: 'http://localhost:5173/api/auth/google/callback',
         proxy: true,
         passReqToCallback: true
-      },
+      },  
       async (req, accessToken, refreshToken, profile, done) => {
         try {
           let user = await User.findOne({ email: profile.emails[0].value });
