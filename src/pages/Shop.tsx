@@ -43,7 +43,7 @@ const Shop = () => {
       name: "ROBOT Cleaner Mini", 
       price: 199.99, 
       rating: 4.5, 
-      image: "/placeholder.svg", 
+      image: "/image.png", 
       description: "Versão compacta do nosso aspirador robô para espaços menores.",
       category: "aspiradores"
     },
