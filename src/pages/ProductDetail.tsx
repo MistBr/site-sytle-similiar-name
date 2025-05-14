@@ -31,7 +31,7 @@ interface Product {
   originalPrice?: number;
   discount?: number;
   rating: number;
-  image: string;
+  images: string[];
   description: string;
   category: string;
   features?: string[];
@@ -71,7 +71,11 @@ const ProductDetail = () => {
         price: 200.00, 
         discount: 25,
         rating: 4.5, 
-        image: "/lovable-uploads/5d12c70a-1777-4acb-8435-bb6095da1675.png", 
+        images: [
+                "/robotcleanermini.png",
+                "/motora.jpg",
+                "/controla.jpg",
+               ],   
         description: "O RobotCleaner é um aspirador robô de última geração, perfeito para manter sua casa limpa com o mínimo de esforço. Com sensores avançados e tecnologia de mapeamento, ele navega facilmente por toda sua casa.",
         category: "aspiradores",
         features: [
@@ -118,7 +122,11 @@ const ProductDetail = () => {
         price: 349.99, 
         discount: 12,
         rating: 5, 
-        image: "/placeholder.svg", 
+        images: [
+                  "/robotcleanerpro.png",
+                  "/motorb.jpg",
+                  "/controlb.jpg",
+                ], 
         description: "Nossa versão premium com sensores avançados e maior potência.",
         category: "aspiradores",
         features: [
@@ -157,7 +165,11 @@ const ProductDetail = () => {
         price: 249.99, 
         discount: 10,
         rating: 4, 
-        image: "/placeholder.svg", 
+        images: [
+                 "/robotcleanerstandard.png",
+                 "/motorc.jpg",
+                 "/controlc.jpg",
+                 ], 
         description: "O modelo padrão perfeito para limpezas diárias.",
         category: "aspiradores"
       }
@@ -251,7 +263,7 @@ const ProductDetail = () => {
         id: product.id,
         name: product.name,
         type: 'product',
-        image: product.image,
+        image: product.images[0] || '',
         description: product.description,
         date: new Date().toISOString()
       });
@@ -371,36 +383,24 @@ const ProductDetail = () => {
               <div className="bg-white rounded-lg overflow-hidden shadow-sm">
                 <Carousel className="w-full">
                   <CarouselContent>
-                    <CarouselItem>
-                      <div className="p-1 h-full">
-                        <div className="flex aspect-square items-center justify-center p-2 relative">
-                          <img 
-                            src={product.image} 
-                            alt={product.name} 
-                            className="object-cover w-full h-full rounded" 
-                          />
-                          {product.discount && (
-                            <div className="absolute top-4 left-4 bg-yellow-400 text-black font-bold px-2 py-1 rounded-full text-sm">
-                              {product.discount}% OFF
-                            </div>
-                          )}
+                    {product.images.map((img, index) => (
+                      <CarouselItem key={index}>
+                        <div className="p-1 h-full">
+                          <div className="flex aspect-square items-center justify-center p-2 relative">
+                            <img 
+                              src={img}
+                              alt={`${product.name} ${index + 1}`}
+                              className="object-cover w-full h-full rounded"
+                            />
+                            {index === 0 && product.discount && (
+                              <div className="absolute top-4 left-4 bg-yellow-400 text-black font-bold px-2 py-1 rounded-full text-sm">
+                                {product.discount}% OFF
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </CarouselItem>
-                    <CarouselItem>
-                      <div className="p-1 h-full">
-                        <div className="flex aspect-square items-center justify-center p-2 bg-gray-100 rounded">
-                          <span className="text-gray-500 font-bold text-lg">Vista lateral</span>
-                        </div>
-                      </div>
-                    </CarouselItem>
-                    <CarouselItem>
-                      <div className="p-1 h-full">
-                        <div className="flex aspect-square items-center justify-center p-2 bg-gray-100 rounded">
-                          <span className="text-gray-500 font-bold text-lg">Vista inferior</span>
-                        </div>
-                      </div>
-                    </CarouselItem>
+                      </CarouselItem>
+                    ))}
                   </CarouselContent>
                   <CarouselPrevious className="left-2" />
                   <CarouselNext className="right-2" />

@@ -205,6 +205,27 @@ const login = async (email: string, password: string) => {
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
   };
 
+function AuthSuccess() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+
+    if (token) {
+      localStorage.setItem('token', token); // ou sessionStorage
+      navigate('/'); // redireciona para página principal
+    } else {
+      navigate('/entrar'); // volta se não tiver token
+    }
+  }, [navigate]);
+
+  return <p>Autenticando...</p>;
+}
+
+export default AuthSuccess;
+
+
   export const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {

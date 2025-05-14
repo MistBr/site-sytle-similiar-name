@@ -24,6 +24,8 @@ import ProjectDetail from "./pages/ProjectDetail";
 import UserProfile from "./pages/UserProfile";
 import ForgotPassword from "./pages/ForgotPassword";
 import { useAuth } from "./contexts/AuthContext"; 
+import AuthSuccess from "./pages/AuthSuccess";
+
 
 // Animated routes wrapper component
 const AnimatedRoutes = () => {
@@ -48,6 +50,7 @@ const AnimatedRoutes = () => {
         <Route path="/contato" element={<Contato />} />
         <Route path="/termos" element={<Termos />} />
         <Route path="/recuperar-senha" element={<ForgotPassword />} />
+        <Route path="/auth/success" element={<AuthSuccess />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>

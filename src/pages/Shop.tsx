@@ -43,7 +43,7 @@ const Shop = () => {
       name: "ROBOT Cleaner Mini", 
       price: 199.99, 
       rating: 4.5, 
-      image: "/image.png", 
+      image: "/robotcleanermini.png", 
       description: "Versão compacta do nosso aspirador robô para espaços menores.",
       category: "aspiradores"
     },
@@ -52,7 +52,7 @@ const Shop = () => {
       name: "ROBOT Cleaner Pro", 
       price: 349.99, 
       rating: 5, 
-      image: "/placeholder.svg", 
+      image: "/robotcleanerpro.png", 
       description: "Nossa versão premium com sensores avançados e maior potência.",
       category: "aspiradores"
     },
@@ -61,7 +61,7 @@ const Shop = () => {
       name: "ROBOT Cleaner Standard", 
       price: 249.99, 
       rating: 4, 
-      image: "/placeholder.svg", 
+      image: "robotcleaner standard.jpg", 
       description: "O modelo padrão perfeito para limpezas diárias.",
       category: "aspiradores"
     },
@@ -70,7 +70,7 @@ const Shop = () => {
       name: "ROBOT Cleaner Kit de Peças", 
       price: 59.99, 
       rating: 4.5, 
-      image: "/placeholder.svg", 
+      image: "kitpecas.jpg", 
       description: "Kit de peças de reposição para todos os modelos.",
       category: "acessorios"
     },
@@ -79,18 +79,9 @@ const Shop = () => {
       name: "ROBOT Mop Attachment", 
       price: 49.99, 
       rating: 4, 
-      image: "/placeholder.svg", 
+      image: "/mopattach.jpg", 
       description: "Acessório para limpeza úmida, compatível com todos os modelos.",
       category: "acessorios"
-    },
-    { 
-      id: 6, 
-      name: "ROBOT Filtro HEPA (3-pack)", 
-      price: 29.99, 
-      rating: 5, 
-      image: "/placeholder.svg", 
-      description: "Filtros HEPA de substituição para captura de alérgenos.",
-      category: "filtros"
     },
   ];
 
@@ -205,7 +196,6 @@ const addToCart = (product: Product) => {
     { value: 'todos', label: 'Todos os Produtos' },
     { value: 'aspiradores', label: 'Aspiradores' },
     { value: 'acessorios', label: 'Acessórios' },
-    { value: 'filtros', label: 'Filtros' },
   ];
 
   const sortOptions = [
@@ -321,10 +311,12 @@ const addToCart = (product: Product) => {
                 {filteredProducts.map(product => (
                   <Card key={product.id} className="overflow-hidden hover:shadow-md transition-shadow duration-300">
                     <CardHeader className="pb-2">
-                      <div className="h-40 bg-gray-200 rounded flex items-center justify-center mb-4 relative">
-                        <span className="text-gray-500 font-bold text-lg">ROBOT Cleaner</span>
-                        
-                        {/* Link para a página de detalhes do produto */}
+                      <div className="h-40 bg-gray-200 rounded flex items-center justify-center mb-4 relative overflow-hidden">
+                        <img 
+                          src={product.image} 
+                          alt={product.name} 
+                          className="h-full object-contain"
+                        />
                         <Link 
                           to={`/produto/${product.id}`} 
                           className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-30 transition-all duration-300 opacity-0 hover:opacity-100"
