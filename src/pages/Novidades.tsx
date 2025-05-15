@@ -94,7 +94,7 @@ const Novidades = () => {
                       </CardDescription>
                     </CardContent>
                     <div className="px-6 pb-6">
-                      <Button className="text-robot-blue hover:text-blue-700 p-0 flex items-center">
+                      <Button className="flex-1 bg-black text-white hover:bg-robot-blue transition-colors duration-300">
                         Leia mais <ArrowRight className="ml-1 h-4 w-4" />
                       </Button>
                     </div>
