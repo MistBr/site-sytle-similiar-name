@@ -165,8 +165,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             <div className="h-48 bg-gray-100 rounded-xl overflow-hidden mb-4 flex items-center justify-center">
               {project.thumbnail ? (
                 <img
-                  src={`/${project.thumbnail.replace(/^\/+/, '')}`}
+                  src={project.thumbnail}
                   alt={project.title}
+                  onError={(e) => {
+                  console.error("Erro ao carregar imagem:", project.thumbnail);
+                  (e.target as HTMLImageElement).src = "/assets/fallback.jpg"; // coloque uma imagem de fallback no public
+                }}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               ) : (

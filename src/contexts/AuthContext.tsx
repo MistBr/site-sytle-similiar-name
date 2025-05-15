@@ -2,6 +2,7 @@
   import { useNavigate } from 'react-router-dom';
   import { useToast } from "@/hooks/use-toast";
   import api from '@/services/api';
+  import axios from 'axios';
 
 
   export interface UserProfile {
@@ -24,7 +25,10 @@
     register: (name: string, email: string, password: string) => Promise<void>;
     registerWithGoogle: (googleToken: string) => Promise<void>;
     logout: () => void;
+    updateUser: (updatedData: Partial<UserProfile>) => Promise<void>;
+    changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
     isAuthenticated: boolean;
+    deleteAccount: () => Promise<void>;
   }
 
   const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -180,6 +184,35 @@ const login = async (email: string, password: string) => {
       }
     };
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+const deleteAccount = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error("Token não encontrado");
+
+    const res = await axios.delete(`${API_URL}/api/auth/delete`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    toast({
+      title: "Conta excluída com sucesso!",
+      description: "Sua conta foi removida do sistema.",
+    });
+
+    logout(); // ou redirect para /entrar
+  } catch (err: any) {
+    console.error("Erro ao excluir conta:", err);
+
+    toast({
+      title: "Erro ao excluir conta",
+      description: err.response?.data?.message || "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+      variant: "destructive",
+    });
+  }
+};
     const logout = () => {
       setCurrentUser(null);
       localStorage.removeItem('currentUser');
@@ -191,18 +224,60 @@ const login = async (email: string, password: string) => {
       navigate('/entrar');
     };
 
-    const value: AuthContextType = {
-      currentUser,
-      loading,
-      login,
-      loginWithGoogle,
-      register,
-      registerWithGoogle,
-      logout,
-      isAuthenticated: !!currentUser,
+    const changePassword = async (currentPassword: string, newPassword: string) => {
+      setLoading(true);
+      try {
+        await api.post('/auth/change-password', { currentPassword, newPassword });
+        toast({ title: "Senha alterada", description: "Sua senha foi alterada com sucesso!" });
+      } catch (error: any) {
+    toast({
+      description: error.response?.data?.message || "Ocorreu um erro ao tentar alterar sua senha.",
+      variant: "destructive",
+    });
+      } finally {
+        setLoading(false);
+      }
     };
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+const updateUser = async (updatedData: Partial<UserProfile>) => {
+  if (!currentUser) return;
+
+  setLoading(true);
+  try {
+    const response = await api.put('/auth/update', updatedData);
+    const updatedUser = { ...currentUser, ...(typeof response.data === 'object' && response.data !== null ? response.data : {}) };
+    setCurrentUser(updatedUser);
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+    toast({ title: "Perfil atualizado", description: "Seus dados foram atualizados com sucesso!" });
+  } catch (error: any) {
+    toast({
+      title: "Erro ao atualizar perfil",
+      description: error.response?.data?.message || "Ocorreu um erro ao tentar atualizar seu perfil.",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
+return (
+  <AuthContext.Provider value={{
+    currentUser,
+    loading,
+    login,
+    loginWithGoogle,
+    register,
+    registerWithGoogle,
+    logout,
+    updateUser,
+    changePassword,
+    deleteAccount, // novo
+    isAuthenticated: !!currentUser
+  }}>
+    {children}
+  </AuthContext.Provider>
+);
+
   };
 
 function AuthSuccess() {

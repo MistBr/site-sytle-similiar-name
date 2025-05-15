@@ -77,7 +77,7 @@ const Shop = () => {
     { 
       id: 5, 
       name: "ROBOT Mop Attachment", 
-      price: 29.99, 
+      price: 49.99, 
       rating: 4, 
       image: "/mopattach.jpg", 
       description: "Acessório para limpeza úmida, compatível com todos os modelos.",

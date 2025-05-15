@@ -18,6 +18,25 @@ router.get('/google', passport.authenticate('google', {
   prompt: 'select_account'
 }));
 
+router.delete('/delete', protect, async (req, res) => {
+  try {
+    const userId = req.user._id || req.user.id;
+
+    console.log('Usuário autenticado:', req.user); // debug importante
+
+    const deleted = await User.findByIdAndDelete(userId);
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
+
+    res.status(200).json({ message: 'Conta excluída com sucesso.' });
+  } catch (err) {
+    console.error('Erro ao excluir conta:', err);
+    res.status(500).json({ message: 'Erro interno ao excluir conta.' });
+  }
+});
+
 // Callback do Google
 router.get(
   '/google/callback',

@@ -10,14 +10,16 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import PageTransition from '@/components/PageTransition';
 
+
 const UserProfile = () => {
-  const navigate = useNavigate();
-  const { currentUser, logout, isAuthenticated, updateUser, changePassword } = useAuth();
+  const navigate = useNavigate();;
 
   // Modal estados
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+
+  const { currentUser, logout, isAuthenticated, deleteAccount } = useAuth();
 
   // Dados endereço
   const [addressForm, setAddressForm] = useState({
@@ -234,7 +236,20 @@ const UserProfile = () => {
                 >
                   Alterar Senha
                 </Button>
-                <Button variant="outline" className="flex-1 bg-red-600 text-white hover:bg-red-950">
+                <Button
+                  variant="outline"
+                  className="flex-1 bg-red-600 text-white hover:bg-red-950"
+                  onClick={async () => {
+                    if (confirm('Tem certeza que deseja excluir sua conta? Essa ação é irreversível.')) {
+                      try {
+                        await deleteAccount();
+                        navigate('/'); // Redirecionar após exclusão
+                      } catch (err) {
+                        alert('Erro ao excluir conta. Tente novamente.');
+                      }
+                    }
+                  }}
+                >
                   Excluir Conta
                 </Button>
               </div>
