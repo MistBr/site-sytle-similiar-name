@@ -14,7 +14,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'https://robotcleaner-oi17z06l7-mistbrs-projects.vercel.app/api/auth/google/callback',
+      callbackURL: 'http://localhost:5002/api/auth/google/callback',
       proxy: true,
       passReqToCallback: true
     },  
