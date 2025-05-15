@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import validator from 'validator';
+import { profile } from 'console';
 
 const { hash, compare } = bcrypt;
 const { isEmail } = validator;
@@ -22,9 +23,6 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: function() {
-      return !this.googleId; // Obrigatório apenas para usuários não-Google
-    },
     minlength: [6, 'A senha deve ter no mínimo 6 caracteres'],
     select: false
   },

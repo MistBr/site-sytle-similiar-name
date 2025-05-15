@@ -129,8 +129,18 @@ export const login = async (req, res, next) => {
 
 
 export const googleLogin = (req, res) => {
-  // O Passport já adicionou o usuário ao req.user
-  createSendToken(req.user, 200, res);
+  try {
+    const token = jwt.sign(
+      { id: req.user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+    // Redireciona com token na URL
+    res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
+  } catch (err) {
+    console.error(err);
+    res.redirect(`${process.env.FRONTEND_URL}/entrar`);
+  }
 };
 
 export const protect = async (req, res, next) => {

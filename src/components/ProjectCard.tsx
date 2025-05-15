@@ -24,6 +24,7 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  console.log("Project thumbnail URL:", project.thumbnail);
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
@@ -157,26 +158,32 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     return 'file';
   };
 
+  
   return (
     <Card className="overflow-hidden hover:shadow-md duration-300 transform hover:scale-[1.02] transition-transform">
-      <CardHeader className="pb-2">
-        <div className="h-48 bg-gray-200 rounded overflow-hidden mb-4">
-          <img
-            src={project.thumbnail}
-            alt={project.title}
-            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
-          />
-        </div>
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="text-lg line-clamp-1">{project.title}</CardTitle>
-            <p className="text-sm text-gray-500">por {project.author}</p>
+        <CardHeader className="pb-2">
+            <div className="h-48 bg-gray-100 rounded-xl overflow-hidden mb-4 flex items-center justify-center">
+              {project.thumbnail ? (
+                <img
+                  src={`/${project.thumbnail.replace(/^\/+/, '')}`}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                />
+              ) : (
+                <span className="text-gray-400 text-sm">Sem imagem</span>
+              )}
+            </div>
+          <div className="flex justify-between items-start gap-2">
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-lg font-semibold truncate">{project.title}</CardTitle>
+              <p className="text-sm text-gray-500 truncate">por {project.author}</p>
+            </div>
+
+            <span className={`flex-shrink-0 ${getCategoryColor(project.category)} rounded-full px-3 py-1 text-xs font-semibold`}>
+              {getCategoryLabel(project.category)}
+            </span>
           </div>
-          <span className={`inline-block ${getCategoryColor(project.category)} rounded-full px-3 py-1 text-xs font-semibold`}>
-            {getCategoryLabel(project.category)}
-          </span>
-        </div>
-      </CardHeader>
+        </CardHeader>
       <CardContent className="pb-2">
         <CardDescription className="line-clamp-2">{project.description}</CardDescription>
         <div className="flex justify-between items-center mt-4 text-sm text-gray-500">
@@ -212,30 +219,29 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             Download indisponível
           </Button>
         )}
-        <Button
-          className={`px-3 ${
-            isFavorite
-              ? 'bg-pink-50 text-pink-600 border-pink-300 hover:bg-pink-100'
-              : 'hover:bg-pink-50 hover:text-pink-600 hover:border-pink-300'
-          } border transition-colors`}
-          onClick={toggleFavorite}
-        >
-          <Heart className="h-4 w-4" fill={isFavorite ? "currentColor" : "none"} />
-        </Button>
-        <Button
-          className="px-3 border border-gray-300 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-          onClick={handleShare}
-        >
-          <Share2 className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="outline"
-          className="flex-1"
-          onClick={() => navigate(`/workshop/projeto/${project.id}`)}
-        >
-          <Eye className="mr-2 h-4 w-4" />
-          Ver Mais
-        </Button>
+          <Button
+            className={`px-3 ${
+              isFavorite
+                ? 'bg-black text-white border-black hover:bg-gray-900'
+                : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+            } border transition-colors`}
+            onClick={toggleFavorite}
+          >
+            <Heart className="h-4 w-4" fill={isFavorite ? "currentColor" : "none"} />
+          </Button>
+          <Button
+            className="px-3 bg-white text-black border border-gray-300 hover:bg-gray-100 transition-colors"
+            onClick={handleShare}
+          >
+            <Share2 className="h-4 w-4" />
+          </Button>
+          <Button
+            className="flex-1 bg-black text-white hover:bg-gray-900 transition-colors"
+            onClick={() => navigate(`/workshop/projeto/${project.id}`)}
+          >
+            <Eye className="mr-2 h-4 w-4" />
+            Ver Mais
+          </Button>
       </CardFooter>
     </Card>
   );

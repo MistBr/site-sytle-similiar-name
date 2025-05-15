@@ -1,3 +1,4 @@
+// src/pages/AuthSuccess.tsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,14 +10,14 @@ function AuthSuccess() {
     const token = params.get("token");
 
     if (token) {
-      localStorage.setItem("token", token); // ou sessionStorage
-      navigate("/perfil"); // Redireciona para uma página após login
+      localStorage.setItem("token", token);
+      navigate("/perfil"); // ou outra rota protegida
     } else {
-      navigate("/entrar"); // Se não houver token, volta para login
+      navigate("/entrar");
     }
   }, [navigate]);
 
-  return <p>Autenticando...</p>;
+  return <p>Autenticando com Google...</p>;
 }
 
 export default AuthSuccess;

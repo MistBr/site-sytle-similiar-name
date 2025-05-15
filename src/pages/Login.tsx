@@ -90,57 +90,18 @@ const handleLogin = async (e: React.FormEvent) => {
   };
     
 const handleGoogleLogin = () => {
-  setIsSubmitting(true);
-  setGoogleError('');
-
   const apiUrl = import.meta.env.VITE_API_URL;
-  if (!apiUrl) {
-    console.error('API URL não configurada');
-    toast({
-      title: "Erro de configuração",
-      description: "Serviço indisponível no momento.",
-      variant: "destructive",
-    });
-    setIsSubmitting(false);
-    return;
-  }
 
-  // Abre o popup para login com Google
   const width = 600;
   const height = 600;
   const left = (window.innerWidth - width) / 2;
   const top = (window.innerHeight - height) / 2;
 
-  const popup = window.open(
-    `${apiUrl}/api/auth/google`, // URL para o backend do Google Login
+  window.open(
+    `${apiUrl}/api/auth/google`,
     'googleLogin',
-    `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
+    `width=${width},height=${height},top=${top},left=${left}`
   );
-
-  // Verifica se o popup foi fechado
-  const checkPopup = setInterval(() => {
-    if (popup && popup.closed) {
-      clearInterval(checkPopup);
-      setIsSubmitting(false);
-    }
-  }, 1000);
-
-  // Escuta a mensagem de sucesso de login do Google
-  window.addEventListener('message', (event) => {
-    if (event.origin !== apiUrl) return; // Verifica a origem da mensagem
-
-    if (event.data === 'login-success') {
-      setIsSubmitting(false);
-      toast({
-        title: "Login bem-sucedido",
-        description: "Você foi autenticado com sucesso!",
-      });
-      navigate('/'); // Redireciona após login bem-sucedido
-    } else if (event.data === 'login-failure') {
-      setIsSubmitting(false);
-      setGoogleError('Falha ao autenticar com o Google.');
-    }
-  });
 };
 
   if (loading) {

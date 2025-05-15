@@ -12,29 +12,24 @@ router.post('/register', register);
 router.post('/login', login);
 
 // Login com Google
-router.get('/google',
-  passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' })
-);
+// Inicia login com Google
+router.get('/google', passport.authenticate('google', {
+  scope: ['profile', 'email'],
+  prompt: 'select_account'
+}));
 
 // Callback do Google
-router.get('/google/callback',
+router.get(
+  '/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   async (req, res) => {
     try {
       const user = req.user;
-
-      // Gerar token JWT
-      const token = jwt.sign(
-        { id: user._id },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
-      );
-
-      // Redirecionar para o frontend com o token
-      res.redirect(`http://localhost:5173/auth/success?token=${token}`);
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
     } catch (err) {
       console.error('Erro ao gerar o token:', err);
-      res.redirect('http://localhost:5173/login'); // Redireciona para a página de login em caso de erro
+      res.redirect(`${process.env.FRONTEND_URL}/entrar`);
     }
   }
 );

@@ -32,7 +32,7 @@ const newsItems = [
     date: '10 de janeiro de 2024',
     description: 'Nossos modelos Pro e Ultra agora são compatíveis com assistentes de voz como Alexa e Google Assistant.',
     tags: ['Atualização', 'Tecnologia'],
-    image: '/placeholder.svg'
+    image: '/arduino.jpg'
   },
   {
     id: 4,
