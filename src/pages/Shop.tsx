@@ -61,7 +61,7 @@ const Shop = () => {
       name: "ROBOT Cleaner Standard", 
       price: 249.99, 
       rating: 4, 
-      image: "robotcleaner standard.jpg", 
+      image: "robotcleanerstandard.jpg", 
       description: "O modelo padrão perfeito para limpezas diárias.",
       category: "aspiradores"
     },
@@ -77,7 +77,7 @@ const Shop = () => {
     { 
       id: 5, 
       name: "ROBOT Mop Attachment", 
-      price: 49.99, 
+      price: 29.99, 
       rating: 4, 
       image: "/mopattach.jpg", 
       description: "Acessório para limpeza úmida, compatível com todos os modelos.",

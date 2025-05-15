@@ -172,6 +172,34 @@ const ProductDetail = () => {
                  ], 
         description: "O modelo padrão perfeito para limpezas diárias.",
         category: "aspiradores"
+      },
+      { 
+        id: 4, 
+        name: "ROBOT Cleaner Kit de Peças", 
+        originalPrice: 59.99,
+        price: 54.99, 
+        discount: 10,
+        rating: 4, 
+        images: [
+                 "/kitpecas.jpg",
+                 ], 
+        description: "O modelo padrão perfeito para limpezas diárias.",
+        category: "aspiradores",
+        reviewCount: 11
+      },
+      { 
+        id: 5, 
+        name: "ROBOT Mop Attachments", 
+        originalPrice: 29.99,
+        price: 24.99, 
+        discount: 10,
+        rating: 4, 
+        images: [
+                 "/mopattach.jpg",
+                 ], 
+        description: "O modelo padrão perfeito para limpezas diárias.",
+        category: "aspiradores",
+        reviewCount: 6
       }
     ];
     
