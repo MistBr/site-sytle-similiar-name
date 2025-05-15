@@ -166,12 +166,13 @@ const ProductDetail = () => {
         discount: 10,
         rating: 4, 
         images: [
-                 "/robotcleanerstandard.png",
+                 "/robotcleanerstandard.jpg",
                  "/motorc.jpg",
                  "/controlc.jpg",
                  ], 
         description: "O modelo padrão perfeito para limpezas diárias.",
-        category: "aspiradores"
+        category: "aspiradores",
+        reviewCount: 20
       },
       { 
         id: 4, 

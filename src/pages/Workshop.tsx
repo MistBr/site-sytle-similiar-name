@@ -262,14 +262,12 @@ const Workshop = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              
               <Button 
-                className="bg-robot-blue hover:bg-blue-800"
-                onClick={() => setIsUploadModalOpen(true)}
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                Enviar Projeto
-              </Button>
+              className="bg-black text-white hover:bg-gray-800 transition-colors"
+              onClick={() => setIsUploadModalOpen(true)}>
+              <Upload className="mr-2 h-4 w-4" />
+              Enviar Projeto
+            </Button>
             </div>
           </div>
           

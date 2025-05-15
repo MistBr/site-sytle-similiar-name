@@ -293,15 +293,27 @@ const ProjectDetail = () => {
                   
                   {/* Botões de ação */}
                   <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                    <Button 
-                      onClick={handleDownload}
-                      className="flex-1 flex items-center justify-center gap-2 bg-robot-blue hover:bg-blue-700"
-                      disabled={!project.fileUrl}
-                    >
-                      <Download className="h-5 w-5" />
-                      Download
-                    </Button>
-                    
+                    {project.fileUrl ? (
+                        <a 
+                          href={project.fileUrl} 
+                          download={`${project.title.replace(/\s+/g, '-').toLowerCase()}.${getFileExtension(project.fileUrl)}`}
+                          onClick={handleDownload}
+                          className="w-full sm:w-auto"
+                        >
+                          <Button className="w-full flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-900 transition-colors duration-200">
+                            <Download className="h-5 w-5" />
+                            Download
+                          </Button>
+                        </a>
+                      ) : (
+                        <Button 
+                          disabled 
+                          className="w-full flex items-center justify-center gap-2 bg-gray-300 text-gray-500 cursor-not-allowed"
+                        >
+                          <Download className="h-5 w-5" />
+                          Download indisponível
+                        </Button>
+                      )}
                     <Button 
                       variant="outline"
                       className={`flex-1 flex items-center justify-center gap-2 ${

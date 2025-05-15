@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Heart, Share2 } from 'lucide-react';
+import { Download, Heart, Share2, Eye } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { addToFavorites, isInFavorites, removeFromFavorites, shareItem } from '@/utils/favorites';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,10 +30,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    // Check if project is in favorites
     setIsFavorite(isInFavorites(project.id, 'project'));
   }, [project.id]);
-  
+
   const handleDownload = () => {
     if (!project.fileUrl) {
       toast({
@@ -44,16 +42,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       });
       return;
     }
-    
-    // Create a temporary anchor element to trigger download
+
     const link = document.createElement('a');
     link.href = project.fileUrl;
     link.download = `${project.title.replace(/\s+/g, '-').toLowerCase()}.${getFileExtension(project.fileUrl)}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
-    // Update project downloads count in localStorage
+
     const savedProjects = localStorage.getItem('workshopProjects');
     if (savedProjects) {
       const projects = JSON.parse(savedProjects);
@@ -65,99 +61,95 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       });
       localStorage.setItem('workshopProjects', JSON.stringify(updatedProjects));
     }
-    
+
     toast({
       title: "Download iniciado",
       description: `${project.title} está sendo baixado.`,
     });
   };
-  
-const toggleFavorite = () => {
-  if (!isAuthenticated) {
-    toast({
-      title: "É necessário estar logado",
-      description: "Faça login para favoritar um projeto.",
-    });
-    navigate('/entrar');
-    return;
-  }
 
-  if (isFavorite) {
-    const removed = removeFromFavorites(project.id, 'project');
-    if (removed) {
-      setIsFavorite(false);
+  const toggleFavorite = () => {
+    if (!isAuthenticated) {
       toast({
-        title: "Removido dos favoritos",
-        description: `${project.title} foi removido dos seus favoritos.`,
+        title: "É necessário estar logado",
+        description: "Faça login para favoritar um projeto.",
       });
+      navigate('/entrar');
+      return;
     }
-  } else {
-    const added = addToFavorites({
-      id: project.id,
-      name: project.title,
-      type: 'project',
-      image: project.thumbnail,
-      description: project.description,
-      date: new Date().toISOString()
-    });
 
-    if (added) {
-      // Atualiza os likes no localStorage
-      const savedProjects = localStorage.getItem('workshopProjects');
-      if (savedProjects) {
-        const projects = JSON.parse(savedProjects);
-        const updatedProjects = projects.map((p: Project) => {
-          if (p.id === project.id) {
-            return { ...p, likes: p.likes + 1 };
-          }
-          return p;
+    if (isFavorite) {
+      const removed = removeFromFavorites(project.id, 'project');
+      if (removed) {
+        setIsFavorite(false);
+        toast({
+          title: "Removido dos favoritos",
+          description: `${project.title} foi removido dos seus favoritos.`,
         });
-        localStorage.setItem('workshopProjects', JSON.stringify(updatedProjects));
       }
-
-      setIsFavorite(true);
-      toast({
-        title: "Adicionado aos favoritos",
-        description: `${project.title} foi adicionado aos seus favoritos.`,
+    } else {
+      const added = addToFavorites({
+        id: project.id,
+        name: project.title,
+        type: 'project',
+        image: project.thumbnail,
+        description: project.description,
+        date: new Date().toISOString()
       });
+
+      if (added) {
+        const savedProjects = localStorage.getItem('workshopProjects');
+        if (savedProjects) {
+          const projects = JSON.parse(savedProjects);
+          const updatedProjects = projects.map((p: Project) => {
+            if (p.id === project.id) {
+              return { ...p, likes: p.likes + 1 };
+            }
+            return p;
+          });
+          localStorage.setItem('workshopProjects', JSON.stringify(updatedProjects));
+        }
+
+        setIsFavorite(true);
+        toast({
+          title: "Adicionado aos favoritos",
+          description: `${project.title} foi adicionado aos seus favoritos.`,
+        });
+      }
     }
-  }
-};
+  };
 
-
-  
   const handleShare = () => {
     shareItem({
       id: project.id,
       type: 'project',
       name: project.title
     });
-    
+
     toast({
       title: "Link copiado",
       description: "Link do projeto copiado para a área de transferência.",
     });
   };
-  
+
   const getCategoryLabel = (category: string) => {
-    switch(category) {
+    switch (category) {
       case 'eletronics': return 'Eletrônica';
       case '3d': return 'Modelagem 3D';
       case 'controls': return 'Controles & Baterias';
       default: return category;
     }
   };
-  
+
   const getCategoryColor = (category: string) => {
-    switch(category) {
+    switch (category) {
       case 'eletronics': return 'bg-blue-100 text-blue-800';
       case '3d': return 'bg-green-100 text-green-800';
       case 'controls': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
-  
-  // Helper function to extract file extension
+
   const getFileExtension = (url: string) => {
     if (url.includes('.')) {
       return url.split('.').pop() || 'file';
@@ -167,26 +159,24 @@ const toggleFavorite = () => {
 
   return (
     <Card className="overflow-hidden hover:shadow-md duration-300 transform hover:scale-[1.02] transition-transform">
-      <Link to={`/workshop/projeto/${project.id}`}>
-        <CardHeader className="pb-2">
-          <div className="h-48 bg-gray-200 rounded overflow-hidden mb-4">
-            <img 
-              src={project.thumbnail} 
-              alt={project.title} 
-              className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" 
-            />
+      <CardHeader className="pb-2">
+        <div className="h-48 bg-gray-200 rounded overflow-hidden mb-4">
+          <img
+            src={project.thumbnail}
+            alt={project.title}
+            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle className="text-lg line-clamp-1">{project.title}</CardTitle>
+            <p className="text-sm text-gray-500">por {project.author}</p>
           </div>
-          <div className="flex justify-between items-start">
-            <div>
-              <CardTitle className="text-lg line-clamp-1">{project.title}</CardTitle>
-              <p className="text-sm text-gray-500">por {project.author}</p>
-            </div>
-            <span className={`inline-block ${getCategoryColor(project.category)} rounded-full px-3 py-1 text-xs font-semibold animate-fade-in`}>
-              {getCategoryLabel(project.category)}
-            </span>
-          </div>
-        </CardHeader>
-      </Link>
+          <span className={`inline-block ${getCategoryColor(project.category)} rounded-full px-3 py-1 text-xs font-semibold`}>
+            {getCategoryLabel(project.category)}
+          </span>
+        </div>
+      </CardHeader>
       <CardContent className="pb-2">
         <CardDescription className="line-clamp-2">{project.description}</CardDescription>
         <div className="flex justify-between items-center mt-4 text-sm text-gray-500">
@@ -200,38 +190,52 @@ const toggleFavorite = () => {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="pt-2">
-        <div className="flex gap-2 w-full">
-          <Button 
-            className="flex-1 bg-robot-blue hover:bg-blue-800 transform hover:scale-105 transition-all duration-200"
+      <CardFooter className="pt-2 flex flex-wrap gap-2">
+        {project.fileUrl ? (
+          <a 
+            href={project.fileUrl} 
+            download={`${project.title.replace(/\s+/g, '-').toLowerCase()}.${getFileExtension(project.fileUrl)}`}
             onClick={handleDownload}
+            className="w-full sm:w-auto"
+          >
+            <Button className="w-full flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-900 transition-colors duration-200">
+              <Download className="mr-2 h-4 w-4" />
+              Download
+            </Button>
+          </a>
+        ) : (
+          <Button 
+            disabled 
+            className="w-full flex items-center justify-center gap-2 bg-gray-300 text-gray-500 cursor-not-allowed"
           >
             <Download className="mr-2 h-4 w-4" />
-            Download
+            Download indisponível
           </Button>
-          <Button 
-            className={`px-3 border ${
-              isFavorite 
-                ? 'bg-pink-50 text-pink-600 border-pink-300 hover:bg-pink-100' 
-                : 'hover:bg-pink-50 hover:text-pink-600 hover:border-pink-300'
-            } transition-colors duration-200`}
-            onClick={(e) => {
-              e.preventDefault();
-              toggleFavorite();
-            }}
-          >
-            <Heart className="h-4 w-4" fill={isFavorite ? "currentColor" : "none"} />
-          </Button>
-          <Button 
-            className="px-3 border border-gray-300 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 transition-colors duration-200"
-            onClick={(e) => {
-              e.preventDefault();
-              handleShare();  
-            }}
-          >
-            <Share2 className="h-4 w-4" />
-          </Button>
-        </div>
+        )}
+        <Button
+          className={`px-3 ${
+            isFavorite
+              ? 'bg-pink-50 text-pink-600 border-pink-300 hover:bg-pink-100'
+              : 'hover:bg-pink-50 hover:text-pink-600 hover:border-pink-300'
+          } border transition-colors`}
+          onClick={toggleFavorite}
+        >
+          <Heart className="h-4 w-4" fill={isFavorite ? "currentColor" : "none"} />
+        </Button>
+        <Button
+          className="px-3 border border-gray-300 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+          onClick={handleShare}
+        >
+          <Share2 className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          className="flex-1"
+          onClick={() => navigate(`/workshop/projeto/${project.id}`)}
+        >
+          <Eye className="mr-2 h-4 w-4" />
+          Ver Mais
+        </Button>
       </CardFooter>
     </Card>
   );
